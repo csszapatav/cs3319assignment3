@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Dr. Western's Vet Clinic</title>
+<title>Dr.Queries</title>
 </head>
 <body>
 <?php
@@ -43,7 +43,7 @@ include 'connecttodb.php';
 	Hospital: 
 	<select>
 		<?php
-			#include'connectedtodb.php";
+			#include'connecttodb.php";
 			#include'gethospital.php";
 		?>
 	</select>
@@ -75,8 +75,8 @@ include 'connecttodb.php';
 <p>
 <h2>Current Head Doctors</h2>
 <?php
-	#include"connecttodb.php"
-	#include"headdoc.php"
+	include'connecttodb.php';
+	include'headdoclist.php';
 ?>
 
 
@@ -84,12 +84,13 @@ include 'connecttodb.php';
 <hr>
 <p>
 <h2>Patient Information</h2>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
 	Enter Patient OHIP Number: <input type="text" name="ohip"><br>
 	<?php
-		#include"connecttodb.php"
-		#include"patientinof.php"
-	?>
+		include"connecttodb.php";
+		#include"patientselection.php";
+
+?>
 	<input type="submit" value="submit"><br>
 </form>
 
@@ -101,8 +102,8 @@ include 'connecttodb.php';
 	Select patient: 
 	<select>
 		<?php
-			#include'connecttodb.php'
-			#include'patientdropdown.php'
+			include'connecttodb.php';
+			include'patientselection.php';
 		?>
 	</select>
 	<br>
