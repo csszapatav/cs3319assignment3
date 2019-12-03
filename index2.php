@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- the code is from writing some php code workshop -->
+<!-- The code is from writing some php code workshop -->
 <html>
 <head>
 <meta charset="utf-8">
-<title>Dr.Queries</title>
+<title>A3-3319 Dr. Queries</title>
 </head>
 <body>
 <?php
@@ -11,14 +11,14 @@ include 'connecttodb.php';
 ?>
 <h1>Welcome to the Doctor Database</h1>
 <h2>General Doctor Query</h2>
-<form action="getdoc.php" method="post"enctype="multipart/form-data" >
+<form action="getdoc.php" method="post" enctype="multipart/form-data" >
 	<fieldset id="name">
 		<input type="radio" value="firstname" name="name">First Name<br>
 		<input type="radio" value="lastname" name="name">Last Name<br>
 	</fieldset>
 	<fieldset id="order">	
 		<input type="radio" value="ASC" name="order">Ascending<br>
-		<input type="radio" value="DESC"name="order">Decending<br>
+		<input type="radio" value="DESC" name="order">Decending<br>
 	</fieldset>
 	<input type="submit" value="Get Doctors">
 </form>
@@ -26,7 +26,7 @@ include 'connecttodb.php';
 <hr>
 <p>
 <h2>Doctor Query by License Date</h2>
-<form action="getdoctorlicensedate.php" method="post">
+<form action="getdoctorbylicensedate.php" method="post">
 	<input type="date" name="licensedate">
 	<input type="submit">
 </form>
@@ -35,37 +35,68 @@ include 'connecttodb.php';
 <hr>
 <p>
 <h2>Add Doctor</h2>
-<form action="adddoctor.php" method="post">
+<form action="addnewdoc.php" method="post">
 	First Name: <input type="text" name="firstname"><br>
 	Last Name: <input type="text" name="lastname"> <br>
 	Specialty: <input type="text" name="specialty"><br>
 	License Date: <input type="date" name="licensedate"><br>
+	License Num: <input type="text" name="licensenum"><br>
+	<input type="text" name="url"><br>
 	Hospital: 
-	<select>
+	<br>
 		<?php
-			#include'connecttodb.php";
-			#include'gethospital.php";
+			include 'connecttodb.php';
+			include 'hospitallist.php';
 		?>
-	</select>
+	<input type="submit" value="add doctor"> <br>
 </form>
 
 <p>
 <hr>
 <p>
-<h2>Delete a Doctor Delete</h2>
-<p> to be continued...<p>
+<h2>Delete Doctor </h2>
+<?php
+include 'connecttodb.php';
+?>
+<h1>List of Doctors:</h1>
+<form action="delete.php" method="post">
 
-<p>
+<ol>
+<?php
+
+   $query = 'SELECT * FROM doctor';
+   $result=mysqli_query($connection,$query);
+    if (!$result) {
+         die("database query2 failed.");
+     }
+    while ($row=mysqli_fetch_assoc($result)) {
+        echo '<li>';
+        echo '<input type="radio" name="doctor" value="';
+        echo $row["licensenum"];
+        echo '">' . $row["firstname"] . " " . $row["lastname"] . "<br>";
+     }
+     mysqli_free_result($result);
+?>
+</ol>
+<input type="submit" value="Delete this doctor">
+</form>
+<?php
+   mysqli_close($connection);
+?>
+
+
 <hr>
 <p>
 <h2>Update Hospital's Name</h2>
-<form action="updatehospitalname.php" method="post">
-	Select Hospital: 
-	<select>
-		#include'connnecttodb.php';
-	<select>
+<form action="newhname.php" method="post">
+	Select Hospital:<br> 
+	<?php
+		include'connecttodb.php';
+		include'hospitallist.php';
+	?>
 	<br>
-	New Hospital Name: <input type="text" name="hospitalName"><br>	
+	New Hospital Name: <input type="text" name="newName"><br>	
+	<input type="submit" value="Update"><br>
 </form>
 <br>
 
@@ -84,10 +115,10 @@ include 'connecttodb.php';
 <hr>
 <p>
 <h2>Patient Information</h2>
-<form action="" method="post" enctype="multipart/form-data">
+<form action="getpatientinfo.php" method="post" enctype="multipart/form-data">
 	Enter Patient OHIP Number: <input type="text" name="ohip"><br>
 	<?php
-		include"connecttodb.php";
+		include'connecttodb.php';
 		#include"patientselection.php";
 
 ?>
@@ -98,61 +129,102 @@ include 'connecttodb.php';
 <hr>
 <p>
 <h2>Treatment Information</h2>
-<form action="" method="post">
-	Select patient: 
-	<select>
-		<?php
-			include'connecttodb.php';
-			include'patientselection.php';
-		?>
-	</select>
-	<br>
-	Select Doctor:
-	<select>
-		<?php
-			#include'connecttodb.php'
-			#include'doctordropdown.php'
-		?>
-	</select>
-	<br>
-	<input type="radio" name="option" value="treat">apply treatment<br>
-	<input type="radio" name="option" value="notreat">remove treatment<br>
-	<input type="submit" value="submit request"><br>
+
+<h2>8.Select Doctor and Patient for Treatment</h2>
+<form action="treat.php" method="post">
+<ol>
+<?php
+   echo 'Select Doctor:';
+   $query = 'SELECT * FROM doctor';
+   $result=mysqli_query($connection,$query);
+    if (!$result) {
+         die("database query2 failed.");
+     }
+    while ($row=mysqli_fetch_assoc($result)) {
+        echo '<li>';
+        echo '<input type="radio" name="doctor" value="';
+        echo $row["licennum"];
+        echo '">' . $row["firstname"] . " " . $row["lastname"] . "<br>";
+     }
+     mysqli_free_result($result);
+?>
+</ol>
+<ol>
+<?php
+
+   echo 'Select Patient:';
+   $query = 'SELECT * FROM patient';
+   $result=mysqli_query($connection,$query);
+    if (!$result) {
+         die("database query2 failed.");
+     }
+    while ($row=mysqli_fetch_assoc($result)) {
+        echo '<li>';
+        echo '<input type="radio" name="patient" value="';
+        echo $row["OHIP"];
+        echo '">' . $row["firstname"] . " " . $row["lastname"] . "<br>";
+     }
+     mysqli_free_result($result);
+
+?>
+</ol>
+<input type="submit" value="Apply Treatment">
 </form>
+
+
+
+<h2>Stop Doctors and Patients from Treatment</h2>
+<form action="ntreat.php" method="post">
+<ol>
+<?php
+   echo 'Select Doctor:';
+   $query = 'SELECT * FROM doctor';
+   $result=mysqli_query($connection,$query);
+    if (!$result) {
+         die("database query2 failed.");
+     }
+    while ($row=mysqli_fetch_assoc($result)) {
+        echo '<li>';
+        echo '<input type="radio" name="doctor" value="';
+        echo $row["licensenum"];
+        echo '">' . $row["firstname"] . " " . $row["lastname"] . "<br>";
+     }
+     mysqli_free_result($result);
+?>
+</ol>
+<ol>
+<?php
+
+   echo 'Select Patient:';
+   $query = 'SELECT * FROM patient';
+   $result=mysqli_query($connection,$query);
+    if (!$result) {
+         die("database query2 failed.");
+     }
+    while ($row=mysqli_fetch_assoc($result)) {
+        echo '<li>';
+        echo '<input type="radio" name="patient" value="';
+        echo $row["OHIP"];
+        echo '">' . $row["firstname"] . " " . $row["lastname"] . "<br>";
+     }
+     mysqli_free_result($result);
+
+?>
+</ol>
+<input type="submit" value="Stop Treatment">
+</form>
+
+
 
 <p>
 <hr>
 <p>
 <h2>Doctors without patients</h2>
 <?php
-	#include"connecttodb.php"
-	#include"doctornopatient.php"
+	include 'connecttodb.php';
+	include'chillingdoctor.php';
 
 ?>
 
-
-<p>
-<hr>
-<p>
-<h2>BONUS: Upload Doctor Picture</h2>
-<p> to be continued...<p>
-<!--
-<form action="addnewpet.php" method="post">
-New Pet's Name: <input type="text" name="petname"><br>
-New Pet's Species: <br>
-<input type="radio" name="species" value="dog">Dog<br>
-<input type="radio" name="species" value="cat">Cat<br>
-<input type="radio" name="species" value="bird">Bird<br>
-<input type="file" name="file" id="file"><br>
-For which customer: <br>
-<?php
-include 'getdata.php';
-?>
-<input type="submit" value="Add New Pet">
-</form>
-<?php
-mysqli_close($connection);
-?>
--->
 </body>
 </html> 
